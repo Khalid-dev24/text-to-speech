@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text-To-Speech App</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+            max-width: 500px;
+            width: 100%;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .container p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px 18px;
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input[type="text"]::placeholder {
+            color: #999;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px 18px;
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            min-height: 120px;
+            max-height: 300px;
+            resize: vertical;
+            overflow-y: auto;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        textarea::placeholder {
+            color: #999;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.4);
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.3s ease;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        .voice-selector {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 14px;
+            background-color: white;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        select:hover {
+            border-color: #667eea;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 25px;
+            }
+
+            .container h1 {
+                font-size: 24px;
+            }
+
+            input[type="text"] {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
+
+            button {
+                padding: 12px 18px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔊 Text to Speech</h1>
+        <p>Convert your text into natural-sounding speech</p>
+        <div class="voice-selector">
+            <label for="voice-select">Select Language:</label>
+            <select id="voice-select"></select>
+        </div>
+        <textarea id="input" placeholder="Enter text here..."></textarea>
+        <button id="speak-button">🎤 Speak Now</button>
+    </div>
+    <script>
+        const input = document.getElementById('input');
+        const speakButton = document.getElementById('speak-button');
+        const voiceSelect = document.getElementById('voice-select');
+        let availableVoices = [];
+
+        const importantLanguages = ['en', 'es', 'fr', 'de', 'it', 'pt', 'ja', 'zh', 'ar', 'ko', 'ru'];
+
+        function populateVoices() {
+            availableVoices = window.speechSynthesis.getVoices();
+            voiceSelect.innerHTML = '';
+
+            const filteredVoices = availableVoices.filter(voice => {
+                const lang = voice.lang.split('-')[0];
+                return importantLanguages.includes(lang);
+            });
+
+            const seenLangs = new Set();
+            const uniqueVoices = [];
+            
+            filteredVoices.forEach((voice, index) => {
+                const lang = voice.lang.split('-')[0];
+                if (!seenLangs.has(lang)) {
+                    seenLangs.add(lang);
+                    uniqueVoices.push({ voice, index: availableVoices.indexOf(voice) });
+                }
+            });
+
+            uniqueVoices.forEach(({ voice, index }) => {
+                const option = document.createElement('option');
+                const langName = new Intl.DisplayNames(['en'], { type: 'language' }).of(voice.lang.split('-')[0]) || voice.lang;
+                option.textContent = langName;
+                option.value = index;
+                voiceSelect.appendChild(option);
+            });
+        }
+
+        function speakText() {
+            if (!input.value.trim()) return;
+            
+            const utterance = new SpeechSynthesisUtterance(input.value);
+            const selectedVoiceIndex = voiceSelect.value;
+            
+            if (selectedVoiceIndex !== '') {
+                utterance.voice = availableVoices[selectedVoiceIndex];
+            }
+            
+            window.speechSynthesis.speak(utterance);
+        }
+
+        speakButton.onclick = speakText;
+
+        input.onkeypress = (e) => {
+            if (e.key === 'Enter') speakText();
+        };
+
+        window.speechSynthesis.onvoiceschanged = populateVoices;
+        populateVoices();
+    </script>
+</body>
+</html>
