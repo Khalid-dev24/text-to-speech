@@ -172,6 +172,12 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: inherit;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 40px;
         }
 
         select:focus {
@@ -222,18 +228,25 @@
         const voiceSelect = document.getElementById('voice-select');
         let availableVoices = [];
 
+        const importantLanguages = ['en', 'es', 'fr', 'de', 'it', 'pt', 'ja', 'zh', 'ar', 'ko', 'ru'];
+
         function populateVoices() {
             availableVoices = window.speechSynthesis.getVoices();
             voiceSelect.innerHTML = '';
 
+            const filteredVoices = availableVoices.filter(voice => {
+                const lang = voice.lang.split('-')[0];
+                return importantLanguages.includes(lang);
+            });
+
             const seenLangs = new Set();
             const uniqueVoices = [];
             
-            availableVoices.forEach((voice, index) => {
+            filteredVoices.forEach((voice, index) => {
                 const lang = voice.lang.split('-')[0];
                 if (!seenLangs.has(lang)) {
                     seenLangs.add(lang);
-                    uniqueVoices.push({ voice, index });
+                    uniqueVoices.push({ voice, index: availableVoices.indexOf(voice) });
                 }
             });
 
